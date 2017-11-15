@@ -18,6 +18,7 @@ endif " has autocmd
 " ------------------------------------------------------------
 " mkdir ~/.vimswap
 set directory=~/.vimswap//
+silent !mkdir ~/.vimswap  > /dev/null 2>&1
 
 
 " ------------------------------------------------------------
