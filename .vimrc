@@ -123,9 +123,7 @@ Plug 'easymotion/vim-easymotion'
 
 Plug 'pangloss/vim-javascript'
 
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
-
+Plug 'xavierd/clang_complete'
 
 " help splitjoin - this moves code in various languages from multiline to
 " single line and back again
@@ -182,35 +180,11 @@ map g# <Plug>(incsearch-nohl-g#)
 " ------------------------------------------------------------
 " ------------------------------------------------------------
 
+
 " ------------------------------------------------------------
-" ----- go files
+" ----- clang_complete
 " ------------------------------------------------------------
-let g:go_test_timeout = '10s' "10s is the default
-let g:go_fmt_command = "goimports" " use goimports on save to fix imports up
-
-autocmd FileType go nmap <leader>r <Plug>(go-run)
-autocmd FileType go nmap <leader>t <Plug>(go-test)
-
-" run :GoBuild or :GoTestCompile based on the go file
-function! s:build_go_files()
-  let l:file = expand('%')
-  if l:file =~# '^\f\+_test\.go$'
-    call go#test#Test(0, 1)
-  elseif l:file =~# '^\f\+\.go$'
-    call go#cmd#Build(0)
-  endif
-endfunction
-
-autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
-autocmd FileType go nmap <leader>cb <Plug>(go-coverage-browser)
-
-autocmd FileType go imap <leader>, <C-x><C-o>
-
-" extra go highlighting options
-let g:go_highlight_build_constraints = 1
-
-let g:go_auto_type_info = 1
-let g:go_info_mode = 'gocode'
-
-
+" path to directory where library can be found
+let g:clang_library_path='/usr/lib/llvm-6.0/lib'
+" or path directly to the library file
+let g:clang_library_path='/usr/lib/llvm-6.0/lib/libclang.so.1'
