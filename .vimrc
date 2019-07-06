@@ -1,4 +1,10 @@
 " ------------------------------------------------------------
+" Install vim-plug First
+" ------------------------------------------------------------
+" curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+
+" ------------------------------------------------------------
 " ----- VIMRC RELOADING AND EDITING 
 " ------------------------------------------------------------
 
@@ -64,6 +70,22 @@ noremap <leader>q :q<cr>
 noremap <leader>s :w<cr>
 
 " ------------------------------------------------------------
+" ----- FIX AUTOCOMPLETE
+" ------------------------------------------------------------
+"
+"  work in progress - would be good to have TAB complete,
+"  should look at some of the plugins 
+"
+set completeopt=longest,menuone
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
+  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+
+inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
+  \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+
+
+" ------------------------------------------------------------
 " ----- SET AUTOWRITE - write file on build, etc
 " ------------------------------------------------------------
 set autowrite
@@ -74,6 +96,12 @@ set autowrite
 set showtabline=2
 
 " ------------------------------------------------------------
+" ----- Ensure syntax highlighting still works even on long
+" ----- lines - turn it off it having probs
+" ------------------------------------------------------------
+set synmaxcol=0
+
+" ------------------------------------------------------------
 " ----- PREFER TO OPEN THINGS IN TABS
 " ------------------------------------------------------------
 set switchbuf=usetab,newtab
@@ -81,7 +109,6 @@ set switchbuf=usetab,newtab
 " ------------------------------------------------------------
 " ----- VIMPLUG
 " ------------------------------------------------------------
-"  curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 call plug#begin('~/.vim/plugged')
 
@@ -90,8 +117,14 @@ Plug 'tpope/vim-sensible'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'vim-syntastic/syntastic'
 Plug 'vim-airline/vim-airline'
+Plug 'haya14busa/incsearch.vim'
+Plug 'scrooloose/nerdcommenter' 
+Plug 'easymotion/vim-easymotion' 
+
+Plug 'pangloss/vim-javascript'
 
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 
 
 " help splitjoin - this moves code in various languages from multiline to
@@ -121,6 +154,25 @@ let g:syntastic_python_checkers=['flake8']
 " ----- NERDTree
 " ------------------------------------------------------------
 nnoremap <leader>n :NERDTreeToggle<CR>
+
+" ------------------------------------------------------------
+" ----- incsearch 
+" ----- see https://github.com/haya14busa/incsearch.vim
+" ------------------------------------------------------------
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+
+" :h g:incsearch#auto_nohlsearch
+set hlsearch
+let g:incsearch#auto_nohlsearch = 1
+map n  <Plug>(incsearch-nohl-n)
+map N  <Plug>(incsearch-nohl-N)
+map *  <Plug>(incsearch-nohl-*)
+map #  <Plug>(incsearch-nohl-#)
+map g* <Plug>(incsearch-nohl-g*)
+map g# <Plug>(incsearch-nohl-g#)
+
 
 " ------------------------------------------------------------
 " ------------------------------------------------------------
@@ -153,6 +205,12 @@ autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
 autocmd FileType go nmap <leader>cb <Plug>(go-coverage-browser)
 
+autocmd FileType go imap <leader>, <C-x><C-o>
+
 " extra go highlighting options
 let g:go_highlight_build_constraints = 1
+
+let g:go_auto_type_info = 1
+let g:go_info_mode = 'gocode'
+
 
